@@ -1,0 +1,21 @@
+<section class="page">
+  <header class="header">
+    <div>Cats list</div>
+    <form class="main-section__form" [formGroup]="formGroup">
+      <mat-form-field class="header__search mat-search-custom">
+        <div matPrefix  class="header__search_prefix"></div>
+        <input formControlName="SearchQuery" class="header__search_input" matInput placeholder="search">
+      </mat-form-field>
+  
+      <mat-form-field class="input-wrapper input-text">
+        <mat-select formControlName="Breed" class="mat-select-custom" placeholder="Change periot in month"> 
+            <mat-option *ngFor="let i of [4,5,6]" [value]="i">{{i}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+    
+  </header>
+
+  <section></section>
+
+</section>

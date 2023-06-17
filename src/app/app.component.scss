@@ -1,0 +1,15 @@
+.header {
+
+    &__search {
+
+        &_prefix {
+            background-image: url('./images/search.svg') ;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            width: 14px; 
+            height: 14px;
+            margin: 0 10px 0 -4px;
+        }
+    }
+}
