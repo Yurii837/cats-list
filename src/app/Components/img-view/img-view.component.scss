@@ -1,0 +1,10 @@
+@import "../../../styles.scss";
+
+.img-wrapper {
+    background-color: $text;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 95vw;
+    height: 95vh;
+}
