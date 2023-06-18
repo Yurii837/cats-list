@@ -4,7 +4,7 @@
     <form class="header__form" [formGroup]="formGroup">
       <mat-form-field class="header__search">
         <div matPrefix  class="header__search_prefix"></div>
-        <input formControlName="SearchQuery" class="header__search_input" matInput placeholder="search">
+        <input [formControl]="SearchQuery" class="header__search_input" matInput placeholder="search by id">
       </mat-form-field>
   
       <mat-form-field class="header__breed-select">
@@ -25,8 +25,8 @@
     <form [formGroup]="formGroup">
       <mat-form-field class="footer__page-select">
         <mat-label>Display per page</mat-label>
-        <mat-select formControlName="PerPage" class="mat-select-custom"> 
-            <mat-option *ngFor="let i of [4,5,6]" [value]="i">{{i}}</mat-option>
+        <mat-select formControlName="Limit" class="mat-select-custom"> 
+            <mat-option *ngFor="let i of [10,30,50]" [value]="i">{{i}}</mat-option>
         </mat-select>
       </mat-form-field>
     </form>

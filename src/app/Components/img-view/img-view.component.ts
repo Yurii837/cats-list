@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ImgParametr } from 'src/app/Types/cats-list';
+import { ImgParametr } from 'src/app/Types/cats-list.interface';
 
 @Component({
   selector: 'app-img-view',
