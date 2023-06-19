@@ -50,7 +50,6 @@ export class AppComponent implements OnInit, OnDestroy {
       take(1) // Take only one emit
     )
     .subscribe(query => {
-      console.log('query',query)
       this.formGroup.get('Limit')?.patchValue(query['limit'])
       this.formGroup.get('Breed')?.patchValue(query['breed_ids']?.split(','))
     })
