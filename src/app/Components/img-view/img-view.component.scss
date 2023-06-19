@@ -7,4 +7,19 @@
     background-size: contain;
     width: 95vw;
     height: 95vh;
+    display: flex;
+    justify-content: center;
+
+    &:hover &__description {
+        opacity: 1;
+    }
+
+    &__description {
+        color: $inputBgLight;
+        font-size: 1.5rem;
+        position: absolute;
+        bottom: 10px;
+        opacity: 0;
+        transition: 0.5s;
+    }
 }

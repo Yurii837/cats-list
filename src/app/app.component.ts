@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CatsServise } from './cats.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { CatItem, Form } from './Types/cats-list.interface';
+import { Breed, CatItem, StateModel } from './Types/cats-list.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { ImgViewComponent } from './Components/img-view/img-view.component';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, skip, take } from 'rxjs/operators';
 import { Subscription, Observable } from 'rxjs';
 import { CatsState } from './NgXS/app-state.state';
 import { Select } from '@ngxs/store';
@@ -16,63 +16,75 @@ import { Select } from '@ngxs/store';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  @Select(CatsState)cats$: Observable<any> | undefined;
+  @Select(CatsState)data$: Observable<StateModel> | undefined;
  
   constructor (
     public catsServise: CatsServise,
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    ) { }
+    ) {
+      this.catsServise.getBreeds();
+     }
 
   public SearchQuery = new FormControl(null,  [Validators.maxLength(10)]);
-
   public formGroup = new FormGroup ({
-    Breed: new FormControl<string | null>(null),
-    Limit: new FormControl<number | null>(10)
+    Breed: new FormControl<string | null[]>([]),
+    Limit: new FormControl<string>('10')
   })
 
   private searchSub = new Subscription();
   private formSub = new Subscription();
-
-  public initItems: CatItem[] = [
-    {"id":"J2PmlIizw","url":"https://cdn2.thecatapi.com/images/J2PmlIizw.jpg","width":1080,"height":1350},
-    {"id":"LSaDk6OjY","url":"https://cdn2.thecatapi.com/images/LSaDk6OjY.jpg","width":1080,"height":1080},
-    {"id":"8pCFG7gCV","url":"https://cdn2.thecatapi.com/images/8pCFG7gCV.jpg","width":750,"height":937},
-    {"id":"8ciqdpaO5","url":"https://cdn2.thecatapi.com/images/8ciqdpaO5.jpg","width":1080,"height":809},
-    {"id":"VZ3qFLIe3","url":"https://cdn2.thecatapi.com/images/VZ3qFLIe3.jpg","width":750,"height":937},
-    {"id":"GAmy2bg8G","url":"https://cdn2.thecatapi.com/images/GAmy2bg8G.jpg","width":750,"height":750},
-    {"id":"8RsP7Xt3h","url":"https://cdn2.thecatapi.com/images/8RsP7Xt3h.jpg","width":1024,"height":817},
-    {"id":"bz15V3Kvg","url":"https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg","width":1440,"height":1080},
-    {"id":"NwMUoJYmT","url":"https://cdn2.thecatapi.com/images/NwMUoJYmT.jpg","width":2160,"height":1440},
-    {"id":"ZocD-pQxd","url":"https://cdn2.thecatapi.com/images/ZocD-pQxd.jpg","width":880,"height":1100}
-  ]
+  public initItems: CatItem[] = []
   public items: CatItem[] = this.initItems;
+  public breeds: Breed[] = [];
+
   
   ngOnInit(): void {
-    this.formGroup.get('Limit')?.patchValue(this.activatedRoute.snapshot.queryParams['limit'])
-    this.formGroup.get('Breed')?.patchValue(this.activatedRoute.snapshot.queryParams['breed_ids'])
+    this.activatedRoute.snapshot
+  
+    // fill form according query
+    this.activatedRoute.queryParams
+    .pipe(
+      skip(1), // Skip the first emit
+      take(1) // Take only one emit
+    )
+    .subscribe(query => {
+      console.log('query',query)
+      this.formGroup.get('Limit')?.patchValue(query['limit'])
+      this.formGroup.get('Breed')?.patchValue(query['breed_ids']?.split(','))
+    })
 
- 
+    // allways add 'limit' query-parametr in the end of the stack
+    setTimeout(() => {
+        this.changeQueryParams({
+        Limit: this.formGroup.value.Limit
+      })
+    }, 0)
+    
+    
+    // Search handler
     this.searchSub = this.SearchQuery.valueChanges
       .pipe(debounceTime(1000))
       .subscribe(res => {
         this.search(res)
       })
 
-      this.formSub = this.formGroup.valueChanges
+    // Form handler
+    this.formSub = this.formGroup.valueChanges
     .subscribe(res => {
-      this.changeQueryParams(res)
-    })
-
-    this.catsServise.getBreeds();
-    
-    this.cats$?.subscribe(res => {
-      console.log('cats', res)
+      this.changeQueryParams(res);
     })
     
+    // fill data from NgXS
+    this.data$?.subscribe(res => {
+      this.initItems = res.cats;
+      this.items = res.cats;
+      this.breeds = res.breeds;
+    })
   }
 
+  // search functional
   private search(value: string | null) { 
     let filter = value?.toLowerCase() || '';
     
@@ -80,7 +92,6 @@ export class AppComponent implements OnInit, OnDestroy {
       return option.id.toLowerCase().includes(filter)
     });
   };
-
 
   public openImg(item: CatItem) {
     this.dialog.open(ImgViewComponent, {
@@ -90,9 +101,14 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  // change query-params
   private changeQueryParams(params: any) {
-    const queryParams: Params = {'limit': params.Limit, 'breed_ids': params.Breed}
+    
+    const returnNullInsteadStr = (arr: any[]) => {
+      return arr?.length ? arr.join(',') : null;
+    }
+
+    const queryParams: Params = {'limit': params.Limit, 'breed_ids': returnNullInsteadStr(params?.Breed)}
     this.router.navigate(
       [], 
       {

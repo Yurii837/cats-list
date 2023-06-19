@@ -5,17 +5,18 @@
     padding: 1.5rem;
     border-radius: 10px;
     box-shadow: inset 0px 0px 15px 1px $textLight;
-    background-color: $bgMainLight;
-    background-image: url('./images/cat-bg.jpg');
+    background-color: $inputBg;
+    background-image: url('./images/bg.jpg');
     background-repeat: repeat;
     background-position: center;
     background-size: contain;
+    min-height: 100%;
 }
 
 .header {
 
     &__title {
-        color: $inputBgLight;
+        color: $text;
         font-size: 2rem;
         font-weight: 500;
         letter-spacing: 2px;
@@ -30,7 +31,7 @@
     }
 
     &__search {
-        flex: 1 1 40%;
+        flex: 0 1 40%;
 
         &_prefix {
             background-image: url('./images/search.svg') ;
@@ -44,7 +45,7 @@
     }
 
     &__breed-select {
-        flex: 0 1 40%;
+        flex: 1 1 40%;
     }
 }
 

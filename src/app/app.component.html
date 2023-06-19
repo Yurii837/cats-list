@@ -9,8 +9,8 @@
   
       <mat-form-field class="header__breed-select">
         <mat-label>Cats breed</mat-label>
-        <mat-select formControlName="Breed" class="" placeholder="Please change a breed"> 
-            <mat-option *ngFor="let i of [4,5,6]" [value]="i">{{i}}</mat-option>
+        <mat-select formControlName="Breed" class="" placeholder="Please change a breed" multiple> 
+            <mat-option *ngFor="let breed of breeds" [value]="breed.id">{{breed.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </form>
@@ -26,7 +26,7 @@
       <mat-form-field class="footer__page-select">
         <mat-label>Display per page</mat-label>
         <mat-select formControlName="Limit" class="mat-select-custom"> 
-            <mat-option *ngFor="let i of [10,30,50]" [value]="i">{{i}}</mat-option>
+            <mat-option *ngFor="let i of ['10','20','30','50']" [value]="i">{{i}}</mat-option>
         </mat-select>
       </mat-form-field>
     </form>

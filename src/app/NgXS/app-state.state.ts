@@ -1,23 +1,25 @@
 import { State, Action, StateContext } from '@ngxs/store';
-import { Breed, CatItem } from '../Types/cats-list.interface';
-import { Cats } from './actions';
-
-export interface StateModel {
-  cats: CatItem[],
-  breeds: Breed[]
-}
+import { StateModel } from '../Types/cats-list.interface';
+import { Breeds, Cats } from './actions';
 
 @State<StateModel>({
-  name: 'myState',
+  name: 'catsState',
   defaults: {
     cats: [],
     breeds: []
   },
 })
+
 export class CatsState {
   @Action(Cats)
-  receiveData(ctx: StateContext<StateModel>, action: Cats) {
+  receiveCats(ctx: StateContext<StateModel>, action: Cats) {
     const state = ctx.getState();
     ctx.setState({ ...state, cats: action.cats });
+  }
+
+  @Action(Breeds)
+  receiveBreeds(ctx: StateContext<StateModel>, action: Breeds) {
+    const state = ctx.getState();
+    ctx.setState({ ...state, breeds: action.breeds });
   }
 }

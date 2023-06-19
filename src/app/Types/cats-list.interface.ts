@@ -1,10 +1,7 @@
-export interface ImgParametr {
+export interface CatItem {
     url: string,
     width: number,
-    height: number
-}
-
-export interface CatItem extends ImgParametr {
+    height: number,
     id: string
 }
 
@@ -17,4 +14,9 @@ export interface Breed {
     name: string,
     id: string
 }
+
+export interface StateModel {
+    cats: CatItem[],
+    breeds: Breed[]
+  }
 
