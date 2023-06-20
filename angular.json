@@ -30,7 +30,8 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "@angular/material/prebuilt-themes/deeppurple-amber.css",     
+              "src/catlist-palette.scss",
               "src/styles.scss"
             ],
             "scripts": []
@@ -95,6 +96,7 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "src/catlist-palette.scss",
               "src/styles.scss"
             ],
             "scripts": []
